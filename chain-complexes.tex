@@ -1,0 +1,175 @@
+\documentclass[twocolumn]{article}
+
+\usepackage{imr}
+\usepackage{graphicx}
+\usepackage{amsfonts}
+\usepackage{bbm}
+\usepackage{amsmath}
+\usepackage{mathrsfs}
+
+\def\thepage {}
+\bibliographystyle{imr}
+
+\begin{document}
+
+\title{An ergonomic approach to topological transformations of unstructured meshes}
+\author{Daniel Shapero$^1$}
+\date{
+    $^1$University of Washington, Seattle, WA, USA, shapero@uw.edu
+}
+
+\abstract{In this paper, we will describe a new approach to performing local transformations to the topology of an unstructured mesh.
+Our approach borrows some ideas from algebraic topology and makes for much easier verification of the underlying computational kernels.}
+
+\keywords{mesh generation, computational geometry, topology}
+
+\maketitle
+\thispagestyle{empty}
+\pagestyle{empty}
+
+
+% --------------------
+\section{Introduction}
+
+All algorithms for generating unstructured meshes are based on using a sequence of local transformations of the mesh topology.
+The simplest of these transformations is a 2-2 edge flip, which is the basis of one common algorithm for computing the Delaunay triangulation of a planar point set \cite{lawson1972transforming}.
+In 3D, these generalize to 3-2 and 2-3 tetrahedral flips, and in arbitrary dimensions these are called bistellar flips or Pachner moves \cite{pachner1991pl}.
+An alternative algorithm for Delaunay triangulation instead uses deletion and retriangulation of star-shaped polytopes \cite{bowyer1981computing, watson1981computing}.
+
+Implementing these topological transformations can be difficult and error-prone.
+In this paper, we will describe a new method for implementing local topological transformations using ideas from algebraic topology.
+We refer to \cite{hatcher2002algebraic} for all formal definitions.
+Our method is based on representing the \emph{boundary operators} of a \emph{chain complex}.
+These boundary operators are really just matrices with integer coefficients.
+We can then describe transformations using linear algebra.
+
+
+% -----------------------
+\section{Chain complexes}
+
+The end goal of mesh generation is to construct a simplicial complex.
+A natural data structure to represent this object in a computer might then include a 2D array of integers, each row of which stores the indices of each top-dimensional simplex.
+We will instead take the unconventional step of using more general \emph{cell complexes}, but we'll motivate the idea by first considering the simplicial case.
+
+Recall that, given an ordered $k$-simplex $[v_0, \ldots, v_k]$, the \emph{boundary} of this simplex is a formal integer linear combination of $k - 1$-simplexes:
+\begin{equation}
+    \partial[v_0, \ldots, v_k] = \sum_i(-1)^i[v_0, \ldots, \hat v_i, \ldots, v_k]
+    \label{eq:simplicial-boundary}
+\end{equation}
+where $[v_0, \ldots, \hat v_i, \ldots, v_k]$ is the simplex obtained by removing the vertex at index $i$.
+Now define a $\mathbb{Z}$-module $\mathscr{C}_k$ consisting of all formal integer linear combinations of simplexes of degree $k$.
+Extending definition \eqref{eq:simplicial-boundary} by $\mathbb{Z}$-linearity, we can prove that $\partial_k : \mathscr{C}_k \to \mathscr{C}_{k - 1}$ is a module homomorphism and
+\begin{equation}
+    \partial_k\cdot\partial_{k + 1} = 0.
+    \label{eq:ddzero}
+\end{equation}
+The natural data structure to represent a boundary operator is a sparse matrix with integer coefficients.
+\textbf{A chain complex is a sequence of $\mathbb{Z}$-modules $\mathscr{C}_k$ together with a set of linear operators $\partial_k$ satisfying equation \eqref{eq:ddzero}.}
+For example, we can also define boundary operators on cubical or polygonal complexes that satisfy equation \eqref{eq:ddzero}.
+The $k$-th boundary operator for a simplicial complex has a kind of regularity in that every column has $k + 1$ non-zero entries, but this regularity is not essential in general.
+
+We'll introduce one final conceit that makes later constructions much more elegant.
+To each chain complex, we will adjoin a \emph{bottom} module $\mathscr{C}_{-1}$ consisting of a single cell $\bot$ of dimension -1.
+We define the boundary of every vertex $v_i$ to be $+\bot$.
+If we write $\mathbbm{1}$ for the column vector of all 1s, then $\partial_0 = \mathbbm{1}^*$, i.e. the row vector of all 1s.
+The addition of this bottom cell is especially convenient because the condition $\partial_0\partial_1 = 0$ implies that the boundary of every edge $e$ has a negative and a positive vertex: $\partial e = v_i - v_j$ for some $i$, $j$.
+We cannot have, for example, $\partial e = v_i + v_j$, which would be undesirable.
+
+One can recover the vertex ordering $[v_0, \ldots, v_k]$ of a simplex from its boundary matrices.
+In other words, we can freely go between a simplicial representation based on arrays of vertex IDs and a cellular representation based on sparse matrices.
+
+
+% -----------------------
+\section{Transformations}
+
+The goal of using chain complexes and boundary operators is to represent all local transformations through purely linear algebraic means.
+Phrasing the problem in this way makes verifying correctness easy.
+
+\subsection{Merging}
+
+First, observe that if $A$, $B$ are integer matrices such that the image of $A\cdot B$ is in the image of $\partial_{k + 1}$, then the matrices
+\begin{equation}
+    \partial_k' = \partial_k\cdot A, \quad \partial_{k + 1}' = B\cdot\partial_{k + 1}
+\end{equation}
+still satisfy $\partial_k'\cdot\partial_{k + 1}' = 0$.
+A particular case is $A\cdot B = I$, which includes for example permutations of the cells.
+The more general case regarding the image of $A\cdot B$ is needed for some irreversible transformations.
+
+A \emph{merge} of adjacent $k$-cells replaces them with a single cell.
+Merging is a column operation, i.e. right multiplication, on the matrix $\partial_k$.
+Adjacent top-dimensional cells can be merged freely and the new boundary operator is
+\begin{equation}
+    \partial_n' = \partial_n\cdot\mathbbm{1}.
+\end{equation}
+Strictly speaking, we should also impose a condition that the union of the cells to be merged is simply-connected.
+One might imagine triangulating an annulus and then merging all the cells together; the union is no longer simply-connected, which violates one of the conditions to be a cell complex (see \cite{hatcher2002algebraic}).
+In realistic problems, for example in implementing the Bowyer-Watson algorithm, one can often prove that a set of cells to be merged form a star-shaped polygon.
+
+For cells that are not top-dimensional, we might need to instead flip some signs, in which case the transformation is
+\begin{align}
+    \partial_k' & = \partial_k\cdot\text{diag}(s_0, \ldots, s_m)\cdot\mathbbm{1}, \\
+    \partial_{k + 1}' & = \left[\begin{matrix} 0 \ldots 1 \ldots 0\end{matrix}\right]\partial_{k + 1}.
+\end{align}
+where $s_i$ are all $\pm 1$.
+The transformation to the rows of $\partial_{k + 1}$ collapses all incidence to any of the $k$-cells into adjacency into incidence to the merged $k$-cell.
+
+\subsection{Splitting}
+
+A \emph{split} divides up the sum of several polytope along a point.
+We'll first describe the 2D case and then proceed to arbitrary dimensions.
+
+Suppose that a collection of adjacent polygons has the boundary operators $\partial_1$ and $\partial_2$.
+We want to ensure that the boundary of the sum of the polygons does not change.
+We first have to draw edges from the new vertex to all the vertices of the polygon.
+The orientation of these edges is arbitrary, so we can assume that every edge goes from (and thus has negative orientation to) the splitting vertex $v$ to thew polygon vertices.
+In terms of matrices, the new 1-boundary operator is
+\begin{equation}
+    \partial_1' = \left[\begin{matrix}\partial_1 & I \\ 0 & -\mathbbm{1}^*\end{matrix}\right]
+\end{equation}
+where $I$ is the identity matrix.
+The key step here is defining the 2-boundary matrix:
+\begin{equation}
+    \partial_2' = \left[\begin{matrix}\text{diag}(\partial_2\cdot\mathbbm{1}) \\ -\partial_1\cdot\text{diag}(\partial_2\cdot\mathbbm{1})\end{matrix}\right]
+\end{equation}
+A rudimentary calculation shows that $\partial_1'\partial_2' = 0$.
+Since $\text{diag}(z)\cdot\mathbbm{1} = z$ for any vector $z$, we also find that
+\begin{equation}
+    \partial_2'\mathbbm{1} = \left[\begin{matrix}\partial_2\mathbbm{1} \\ 0\end{matrix}\right]
+\end{equation}
+or in other words the new polygon has the same boundary as the old.
+
+We can get an idea for how to extend this to $n$ dimensions by remembering that $\mathbbm{1}^* = \partial_0$.
+This suggests the transformation
+\begin{align}
+    \partial_k' & = \left[\begin{matrix}\partial_k & I \\ 0 & -\partial_{k - 1}\end{matrix}\right] \label{eq:split-k} \\
+    \partial_n' & = \left[\begin{matrix}\text{diag}(\partial_n\cdot\mathbbm{1}) \\ -\partial_{n - 1}\text{diag}(\partial_n\cdot\mathbbm{1})\end{matrix}\right] \label{eq:split-n}
+\end{align}
+Again, a rudimentary calculation shows that the fundamental equation \eqref{eq:ddzero} still holds and that the new polytopes have the same boundary as the old.
+To our knowledge, equations \eqref{eq:split-k} and \eqref{eq:split-n} have not appeared in the literature before.
+All the primitive construction operations required to form these matrices are available in the NumPy linear algebra module \cite{harris2020array}.
+
+\subsection{Splitting and merging}
+
+The split transformation is all that is required to implement the Bowyer-Watson algorithm \cite{bowyer1981computing, watson1981computing}.
+Other transformations can be defined by combining a sequence of splits and merges.
+For example, a 2-2 flip in 2D can be defined by splitting the quadrilateral along a temporary, virtual vertex, then merging two pairs of triangles, merging two edges to form the diagonal, and finally deleting the virtual vertex.
+Similarly, 2-3 and 3-2 flips can be implemented by first going through an intermediate state consisting of 6 tetrahedra.
+
+\textbf{Talk about multi-cell transformations...}
+
+
+% ------------------
+\section{Conclusion}
+
+Many data structures have been created to represent unstructured meshes and each one is designed to be optimal for particular use cases.
+Doubly-connected edge lists have historically been very popular for mesh generation because they make traversal of the topology particularly simple.
+Array-based representations, on the other hand, have seen more use in finite element analysis.
+This representation is the most memory efficient and memory access is the performance-limiting factor for this application.
+Here we propose that the boundary operators between chain complexes are an ideal representation for the local topology if the goal is to perform topological transformations.
+When the underlying objects of study can be represented as linear operators, we can apply linear algebraic reasoning and intuition to define transformations and easily verify that they preserve all of the important invariants.
+The condition in equation \eqref{eq:ddzero} that the product of two boundary operators is zero is a very powerful invariant for ensuring the validity of the underlying topology.
+
+
+\bibliography{chain-complexes.bib}
+
+\end{document}

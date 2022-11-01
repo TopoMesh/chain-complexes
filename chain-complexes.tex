@@ -155,7 +155,9 @@ Other transformations can be defined by combining a sequence of splits and merge
 For example, a 2-2 flip in 2D can be defined by splitting the quadrilateral along a temporary, virtual vertex, then merging two pairs of triangles, merging two edges to form the diagonal, and finally deleting the virtual vertex.
 Similarly, 2-3 and 3-2 flips can be implemented by first going through an intermediate state consisting of 6 tetrahedra.
 
-\textbf{Talk about multi-cell transformations...}
+A few papers have argued for the utility of multi-cell transformations for 3D mesh improvement \cite{klingner2008aggressive}.
+Multi-cell transformations are substantially more complex than 2-3 or 3-2 flips, but \cite{misztal2009tetrahedral} showed that these complex transformations are implemented as a sequence of 2-3 and 3-2 flips.
+Using the boundary operator representation might make it possible to implement complex topological transforms with less effort and in fewer steps.
 
 
 % ------------------

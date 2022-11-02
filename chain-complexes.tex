@@ -3,9 +3,11 @@
 \usepackage{imr}
 \usepackage{graphicx}
 \usepackage{amsfonts}
-\usepackage{bbm}
+\usepackage{bbm}       % for \mathbbm{1}
 \usepackage{amsmath}
-\usepackage{mathrsfs}
+\usepackage{mathrsfs}  % for \mathscr
+\usepackage{tikz}
+\usetikzlibrary{decorations.markings}
 
 \def\thepage {}
 \bibliographystyle{imr}
@@ -67,6 +69,52 @@ The natural data structure to represent a boundary operator is a sparse matrix w
 \textbf{A chain complex is a sequence of $\mathbb{Z}$-modules $\mathscr{C}_k$ together with a set of linear operators $\partial_k$ satisfying equation \eqref{eq:ddzero}.}
 For example, we can also define boundary operators on cubical or polygonal complexes that satisfy equation \eqref{eq:ddzero}.
 The $k$-th boundary operator for a simplicial complex has a kind of regularity in that every column has $k + 1$ non-zero entries, but this regularity is not essential in general.
+See figure \ref{fig:two-triangle-chain-complex} for an illustration of a simple topology together with the corresponding boundary operators.
+
+% TODO: Add labels to the figure and the boundary matrices, see
+% https://tex.stackexchange.com/a/59732
+\begin{figure}[h]
+    \begin{minipage}{0.48\linewidth}
+        \begin{tikzpicture}
+            \draw[fill=blue!35] (1, 0) -- (3, 0) -- (2, 2) -- cycle;
+            \draw[fill=red!35] (1, 0) -- (2, 2) -- (0, 2) -- cycle;
+            \begin{scope}[
+                very thick,
+                decoration={markings, mark=at position 0.5 with {\arrow{>}}}
+            ]
+                \draw[postaction={decorate}] (1, 0) -- (3, 0);
+                \draw[postaction={decorate}] (3, 0) -- (2, 2);
+                \draw[postaction={decorate}] (2, 2) -- (0, 2);
+                \draw[postaction={decorate}] (0, 2) -- (1, 0);
+                \draw[postaction={decorate}] (1, 0) -- (2, 2);
+            \end{scope}
+        \end{tikzpicture}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.48\linewidth}
+        {\small
+            \begin{equation*}
+                \partial_1 = \left[\begin{matrix}
+                    - &   & + & - &   \\
+                    + & - &   &   & + \\
+                      & + & - &   &   \\
+                      &   &   & + & -
+                \end{matrix}\right]
+            \end{equation*}
+            \begin{equation*}
+                \partial_2 = \left[\begin{matrix}
+                    + & - \\
+                    + &   \\
+                    + &   \\
+                      & + \\
+                      & +
+                \end{matrix}\right]
+            \end{equation*}
+        }
+    \end{minipage}
+    \caption{Pair of adjacent triangles (left) and their boundary matrices (right).}
+    \label{fig:two-triangle-chain-complex}
+\end{figure}
 
 We'll introduce one final conceit that makes later constructions much more elegant.
 To each chain complex, we will adjoin a \emph{bottom} module $\mathscr{C}_{-1}$ consisting of a single cell $\bot$ of dimension -1.
@@ -137,6 +185,103 @@ Since $\text{diag}(z)\cdot\mathbbm{1} = z$ for any vector $z$, we also find that
     \partial_2'\mathbbm{1} = \left[\begin{matrix}\partial_2\mathbbm{1} \\ 0\end{matrix}\right]
 \end{equation}
 or in other words the new polygon has the same boundary as the old.
+Figure \ref{fig:split-transformation} illustrates the split transformation on a single quadrilateral and shows the boundary matrices before and after.
+
+\begin{figure}[h]
+    \begin{tikzpicture}
+        \coordinate (p0) at (1.5, 1){};
+        \coordinate (p1) at (1, 0){};
+        \coordinate (p2) at (3, 0){};
+        \coordinate (p3) at (2, 2){};
+        \coordinate (p4) at (0, 2){};
+
+        \draw[fill=purple!35] (p1) -- (p2) -- (p3) -- (p4) -- cycle;
+        \begin{scope}[
+            very thick,
+            decoration={markings, mark=at position 0.5 with {\arrow{>}}}
+        ]
+            \draw[postaction={decorate}] (p1) -- (p2);
+            \draw[postaction={decorate}] (p2) -- (p3);
+            \draw[postaction={decorate}] (p3) -- (p4);
+            \draw[postaction={decorate}] (p4) -- (p1);
+        \end{scope}
+
+        \foreach \p in {p1, p2, p3, p4} {
+            \filldraw (\p) circle (2pt);
+        }
+    \end{tikzpicture}
+    \begin{tikzpicture}
+        \coordinate (p0) at (1.5, 1){};
+        \coordinate (p1) at (1, 0){};
+        \coordinate (p2) at (3, 0){};
+        \coordinate (p3) at (2, 2){};
+        \coordinate (p4) at (0, 2){};
+
+        \draw[fill=orange!15] (p1) -- (p2) -- (p0) -- cycle;
+        \draw[fill=green!15] (p2) -- (p3) -- (p0) -- cycle;
+        \draw[fill=blue!15] (p3) -- (p4) -- (p0) -- cycle;
+        \draw[fill=yellow!15] (p4) -- (p1) -- (p0) -- cycle;
+        \begin{scope}[
+            very thick,
+            decoration={markings, mark=at position 0.5 with {\arrow{>}}}
+        ]
+            \draw[postaction={decorate}] (p1) -- (p2);
+            \draw[postaction={decorate}] (p2) -- (p3);
+            \draw[postaction={decorate}] (p3) -- (p4);
+            \draw[postaction={decorate}] (p4) -- (p1);
+            \draw[postaction={decorate}] (p0) -- (p2);
+            \draw[postaction={decorate}] (p0) -- (p3);
+            \draw[postaction={decorate}] (p0) -- (p4);
+            \draw[postaction={decorate}] (p0) -- (p1);
+        \end{scope}
+
+        \foreach \p in {p0, p1, p2, p3, p4} {
+            \filldraw (\p) circle (2pt);
+        }
+    \end{tikzpicture}
+
+    {\small
+        \begin{equation*}
+            \partial_1 = \left[\begin{matrix}
+                - &   &   & + \\
+                + & - &   &   \\
+                  & + & - &   \\
+                  &   & + & -
+            \end{matrix}\right],
+            \quad
+            \partial_2 = \left[\begin{matrix}
+                + \\ + \\ + \\ +
+            \end{matrix}\right]
+        \end{equation*}
+
+        \begin{equation*}
+            \partial_1' = \left[\begin{array}{cccc|cccc}
+                - &   &   & + & + &   &   &   \\
+                + & - &   &   &   & + &   &   \\
+                  & + & - &   &   &   & + &   \\
+                  &   & + & - &   &   &   & + \\
+                \hline
+                  &   &   &   & - & - & - & -
+            \end{array}\right]
+        \end{equation*}
+        \begin{equation*}
+            \partial_2' = \left[\begin{array}{cccc}
+                + &   &   &   \\
+                  & + &   &   \\
+                  &   & + &   \\
+                  &   &   & + \\
+                \hline
+                + &   &   & - \\
+                - & + &   &   \\
+                  & - & + &   \\
+                  &   & - & +
+            \end{array}\right]
+        \end{equation*}
+    }
+
+    \caption{Quadrilateral before and after splitting on a new vertex in the center (top) and boundary matrices before and after (bottom).}
+    \label{fig:split-transformation}
+\end{figure}
 
 We can get an idea for how to extend this to $n$ dimensions by remembering that $\mathbbm{1}^* = \partial_0$.
 This suggests the transformation
@@ -150,10 +295,69 @@ All the primitive construction operations required to form these matrices are av
 
 \subsection{Splitting and merging}
 
-The split transformation is all that is required to implement the Bowyer-Watson algorithm \cite{bowyer1981computing, watson1981computing}.
+The split transformation is all that is required to implement the Bowyer-Watson algorithm \cite{bowyer1981computing, watson1981computing} or to compute convex hulls \cite{berg1997computational}.
 Other transformations can be defined by combining a sequence of splits and merges.
-For example, a 2-2 flip in 2D can be defined by splitting the quadrilateral along a temporary, virtual vertex, then merging two pairs of triangles, merging two edges to form the diagonal, and finally deleting the virtual vertex.
+For example, a 2-2 flip in 2D can be defined by (1) splitting the quadrilateral along a temporary, virtual vertex, (2) merging two pairs of triangles, (3) merging two edges to form the diagonal, and finally (4) deleting the virtual vertex.
 Similarly, 2-3 and 3-2 flips can be implemented by first going through an intermediate state consisting of 6 tetrahedra.
+
+\begin{figure}[h]
+    \tikzset{ec/.style={every coordinate/.try}}
+
+    \begin{tikzpicture}[scale=0.4]
+        \coordinate (p0) at (1.5, 1){};
+        \coordinate (p1) at (1, 0){};
+        \coordinate (p2) at (3, 0){};
+        \coordinate (p3) at (2, 2){};
+        \coordinate (p4) at (0, 2){};
+
+        \begin{scope}[very thick]
+            \draw (p1) -- (p2) -- (p4) -- cycle;
+            \draw (p4) -- (p3) -- (p2) -- cycle;
+
+            \foreach \p in {p1, p2, p3, p4} {
+                \filldraw (\p) circle (3pt);
+            }
+        \end{scope}
+
+        \begin{scope}[very thick, every coordinate/.style={shift={(3.5,0)}}]
+            \draw ([ec]p1) -- ([ec]p2) -- ([ec]p3) -- ([ec]p4) -- cycle;
+
+            \foreach \p in {p1, p2, p3, p4} {
+                \filldraw ([ec]\p) circle (3pt);
+            }
+        \end{scope}
+
+        \begin{scope}[very thick, every coordinate/.style={shift={(7,0)}}]
+            \draw ([ec]p0) -- ([ec]p1) -- ([ec]p2) -- cycle;
+            \draw ([ec]p0) -- ([ec]p2) -- ([ec]p3) -- cycle;
+            \draw ([ec]p0) -- ([ec]p3) -- ([ec]p4) -- cycle;
+            \draw ([ec]p0) -- ([ec]p4) -- ([ec]p1) -- cycle;
+
+            \foreach \p in {p0, p1, p2, p3, p4} {
+                \filldraw ([ec]\p) circle (3pt);
+            }
+        \end{scope}
+
+        \begin{scope}[very thick, every coordinate/.style={shift={(10.5,0)}}]
+            \draw ([ec]p1) -- ([ec]p2) -- ([ec]p3) -- cycle;
+            \draw ([ec]p3) -- ([ec]p4) -- ([ec]p1) -- cycle;
+
+            \foreach \p in {p0, p1, p2, p3, p4} {
+                \filldraw ([ec]\p) circle (3pt);
+            }
+        \end{scope}
+
+        \begin{scope}[very thick, every coordinate/.style={shift={(14,0)}}]
+            \draw ([ec]p1) -- ([ec]p2) -- ([ec]p3) -- cycle;
+            \draw ([ec]p3) -- ([ec]p4) -- ([ec]p1) -- cycle;
+
+            \foreach \p in {p1, p2, p3, p4} {
+                \filldraw ([ec]\p) circle (3pt);
+            }
+        \end{scope}
+    \end{tikzpicture}
+    \caption{A 2-2 flip, implemented as a sequence of merges and splits.}
+\end{figure}
 
 A few papers have argued for the utility of multi-cell transformations for 3D mesh improvement \cite{klingner2008aggressive}.
 Multi-cell transformations are substantially more complex than 2-3 or 3-2 flips, but \cite{misztal2009tetrahedral} showed that these complex transformations are implemented as a sequence of 2-3 and 3-2 flips.

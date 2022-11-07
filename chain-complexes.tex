@@ -371,6 +371,16 @@ Multi-cell transformations are substantially more complex than 2-3 or 3-2 flips,
 Using the boundary operator representation might make it possible to implement complex topological transforms with less effort and in fewer steps.
 
 
+% ---------------------
+\section{Demonstration}
+
+As a proof of concept, we developed a software package called \emph{zmsh}
+which implements the split transformation defined in equations \eqref{eq:split-k} and \eqref{eq:split-n}.
+We used the split transformation to implement a convex hull algorithm that (in principle) works in arbitrary dimensions.
+To test the convex hull code, we used (1) random point sets up to dimension 5 and (2) several synthetic input sets with various degeneracies such as coplanarity.
+For geometric predicates, we used the Python standard library's built-in routines to convert a floating point value exactly to a ratio of big integers.
+
+
 % ------------------
 \section{Conclusion}
 

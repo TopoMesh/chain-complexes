@@ -304,12 +304,13 @@ All the primitive construction operations required to form these matrices are av
 
 The split transformation is all that is required to implement the Bowyer-Watson algorithm \cite{bowyer1981computing, watson1981computing} or to compute convex hulls \cite{berg1997computational}.
 Other transformations can be defined by combining a sequence of splits and merges.
-For example, a 2-2 flip in 2D can be defined by (1) splitting the quadrilateral along a temporary, virtual vertex, (2) merging two pairs of triangles, (3) merging two edges to form the diagonal, and finally (4) deleting the virtual vertex.
+For example, figure \ref{fig:2-2-flip} shows how to perform a 2-2 flip in 2D by first splitting the quadrilateral into four triangles and then performing a sequence of merges.
 Similarly, 2-3 and 3-2 flips can be implemented by first going through an intermediate state consisting of 6 tetrahedra.
 
 \begin{figure}[h]
     \tikzset{ec/.style={every coordinate/.try}}
 
+    \begin{center}
     \begin{tikzpicture}[scale=0.4]
         \coordinate (p0) at (1.5, 1){};
         \coordinate (p1) at (1, 0){};
@@ -362,8 +363,18 @@ Similarly, 2-3 and 3-2 flips can be implemented by first going through an interm
                 \filldraw ([ec]\p) circle (3pt);
             }
         \end{scope}
+
+        \begin{scope}[very thick]
+            \draw[->] (2, -0.2) arc[start angle=180, end angle=360, radius=1.5] node[midway, below, align=center] {merge\\triangles};
+            \draw[->] (5.5, -0.2) arc[start angle=180, end angle=360, radius=1.5] node[midway, below] {split};
+            \draw[->] (9.0, -0.2) arc[start angle=180, end angle=360, radius=1.5] node[midway, below, align=center] {merge\\triangles};
+            \draw[->] (12.5, -0.2) arc[start angle=180, end angle=360, radius=1.5] node[midway, below, align=center] {merge\\edges};
+        \end{scope}
     \end{tikzpicture}
-    \caption{A 2-2 flip, implemented as a sequence of merges and splits.}
+    \end{center}
+    \caption{A 2-2 flip, implemented as a sequence of merges and splits.
+    The vertex added by splitting the quadrilateral is deleted when the two edges are merged in the final transformation.}
+    \label{fig:2-2-flip}
 \end{figure}
 
 A few papers have argued for the utility of multi-cell transformations for 3D mesh improvement \cite{klingner2008aggressive}.

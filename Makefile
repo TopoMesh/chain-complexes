@@ -1,6 +1,9 @@
 all: chain-complexes.pdf
 
-%.pdf: %.tex %.bib
+%.tikz: %.sk
+	sketch $< -o $@
+
+%.pdf: %.tex %.bib figures/tetrahedra.tikz
 	pdflatex $<
 	bibtex $*
 	pdflatex $<

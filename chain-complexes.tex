@@ -307,8 +307,8 @@ The Bowyer-Watson algorithm \cite{bowyer1981computing, watson1981computing} for 
 \subsection{Splitting and merging}
 
 Other transformations can be defined by combining a sequence of splits and merges.
-For example, figure \ref{fig:2-2-flip} shows how to perform a 2-2 flip in 2D by first splitting the quadrilateral into four triangles and then performing a sequence of merges.
-Similarly, 2-3 and 3-2 flips can be implemented by first going through an intermediate state consisting of 6 tetrahedra.
+For example, figure \ref{fig:2-2-flip} shows how to perform a 2-2 flip in 2D by first splitting the quadrilateral into four triangles and then performing a sequence of merges and figure \ref{fig:2-3-flip} shows the same process for a 2-3 flip in 3D.
+(We've shown an initial merge step for illustrative purposes, but this merge is actually part of the subsequent split.)
 
 \begin{figure}[h]
     \tikzset{ec/.style={every coordinate/.try}}
@@ -378,6 +378,15 @@ Similarly, 2-3 and 3-2 flips can be implemented by first going through an interm
     \caption{A 2-2 flip, implemented as a sequence of merges and splits.
     The vertex added by splitting the quadrilateral is deleted when the two edges are merged in the final transformation.}
     \label{fig:2-2-flip}
+\end{figure}
+
+\begin{figure}[h]
+    \begin{center}
+        \input{figures/tetrahedra.tikz}
+    \end{center}
+    \caption{A 2-3 flip implemented as a sequence of merges and splits.
+    We've shown the tetrahedra in an ``exploded'' view to help with visualization.}
+    \label{fig:2-3-flip}
 \end{figure}
 
 A few papers have argued for the utility of multi-cell transformations for 3D mesh improvement \cite{klingner2008aggressive}.

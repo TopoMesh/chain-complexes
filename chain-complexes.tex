@@ -300,9 +300,10 @@ Again, a rudimentary calculation shows that the fundamental equation \eqref{eq:d
 To our knowledge, equations \eqref{eq:split-k} and \eqref{eq:split-n} have not appeared in the literature before.
 All the primitive construction operations required to form these matrices are available in the NumPy linear algebra module \cite{harris2020array}.
 
+The Bowyer-Watson algorithm \cite{bowyer1981computing, watson1981computing} for Delaunay triangulation and all common algorithms for computing convex hulls \cite{berg1997computational} only require the split transformation.
+
 \subsection{Splitting and merging}
 
-The split transformation is all that is required to implement the Bowyer-Watson algorithm \cite{bowyer1981computing, watson1981computing} or to compute convex hulls \cite{berg1997computational}.
 Other transformations can be defined by combining a sequence of splits and merges.
 For example, figure \ref{fig:2-2-flip} shows how to perform a 2-2 flip in 2D by first splitting the quadrilateral into four triangles and then performing a sequence of merges.
 Similarly, 2-3 and 3-2 flips can be implemented by first going through an intermediate state consisting of 6 tetrahedra.

@@ -67,11 +67,12 @@ Extending definition \eqref{eq:simplicial-boundary} by $\mathbb{Z}$-linearity, w
     \partial_k\cdot\partial_{k + 1} = 0.
     \label{eq:ddzero}
 \end{equation}
-The natural data structure to represent a boundary operator is a sparse matrix with integer coefficients.
+The natural data structure to represent a boundary operator is a matrix with integer coefficients.
 
 \textbf{A chain complex is any sequence of $\mathbb{Z}$-modules $\mathscr{C}_k$ together with a set of linear operators $\partial_k$ satisfying equation \eqref{eq:ddzero}.}
-A simplicial complexes naturally gives rise to a chain complex, but so can other types of geometries.
-For example, we can define boundary operators on cubical or polygonal complexes that satisfy equation \eqref{eq:ddzero}.
+We can define boundary operators and chain complexes on many other types of geometries, including cubical complexes, which are an alternative to the simplicial category, and cell complexes, which are more general and include both the cubical and simplicial cases.
+The formal definition of the boundary operators on cell complexes uses the \emph{topological degree} of the \emph{attaching maps} between cells and their faces \cite{hatcher2002algebraic}, but this level of detail is unnecessary for the discussion that follows.
+For our purposes, it suffices to work with integer matrices that satisfy equation \eqref{eq:ddzero}.
 The $k$-th boundary operator for a simplicial complex has a kind of regularity in that every column has $k + 1$ non-zero entries, but this regularity is not essential in general.
 See figure \ref{fig:two-triangle-chain-complex} for an illustration of a simple topology together with the corresponding boundary operators.
 

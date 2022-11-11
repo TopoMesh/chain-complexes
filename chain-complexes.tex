@@ -410,8 +410,8 @@ For example, figure \ref{fig:2-2-flip} shows how to perform a 2-2 flip in 2D by 
     \label{fig:2-3-flip}
 \end{figure}
 
-A few papers have argued for the utility of multi-cell transformations for 3D mesh improvement \cite{klingner2008aggressive}.
-Multi-cell transformations are substantially more complex than 2-3 or 3-2 flips, but \cite{misztal2009tetrahedral} showed that these complex transformations are implementable as a sequence of 2-3 and 3-2 flips.
+A few papers have proposed using multi-cell transformations for 3D mesh improvement \cite{klingner2008aggressive}.
+Multi-cell transformations are more complex than 2-3 or 3-2 flips, but \cite{misztal2009tetrahedral} showed that they can be implemented as a sequence of 2-3 and 3-2 flips.
 Using the boundary operator representation might make it possible to implement complex topological transforms with less effort and in fewer steps.
 
 
@@ -428,11 +428,14 @@ For geometric predicates, we used the Python standard library's built-in routine
 % ------------------
 \section{Conclusion}
 
-Many data structures have been created to represent unstructured meshes and each one is designed to be optimal for particular use cases.
-Doubly-connected edge lists have historically been very popular for mesh generation because they make traversal of the topology particularly simple.
-Array-based representations, on the other hand, have seen more use in finite element analysis.
-This representation is the most memory efficient and memory access is the performance-limiting factor for this application.
-Here we propose that the boundary operators between chain complexes are an ideal representation for the local topology if the goal is to perform topological transformations.
+Doubly-connected edge lists have historically been popular for mesh generation because they offer a simple interface for traversing the topology \cite{guibas1985primitives}.
+Here we propose that boundary operators are an ideal representation if the goal is to perform topological transformations.
+Our work was inspired by \cite{knepley2009mesh}, which used CW complexes to describe mesh topologies and now forms the core of the PETSc DMPlex class \cite{balay2019petsc}.
+
+Boundary operators are only necessary for representing a small patch of the topology at a time.
+Once the transformed patch is computed, it can be translated back to a set of simplexes.
+Boundary operators are useful for describing non-simplicial intermediate states of a transformation; they are not space-optimal for describing an entire simplicial complex.
+
 When the underlying objects of study can be represented as linear operators, we can apply linear algebraic reasoning and intuition to define transformations and easily verify that they preserve all of the important invariants.
 The condition in equation \eqref{eq:ddzero} that the product of two boundary operators is zero is a very powerful invariant for ensuring the validity of the underlying topology.
 

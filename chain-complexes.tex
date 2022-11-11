@@ -87,20 +87,30 @@ See figure \ref{fig:two-triangle-chain-complex} for an illustration of a simple 
 % https://tex.stackexchange.com/a/59732
 \begin{figure}[h]
     \begin{minipage}{0.48\linewidth}
-        \begin{tikzpicture}
-            \draw[fill=blue!35] (1, 0) -- (3, 0) -- (2, 2) -- cycle;
-            \draw[fill=red!35] (1, 0) -- (2, 2) -- (0, 2) -- cycle;
-            \begin{scope}[
-                very thick,
-                decoration={markings, mark=at position 0.5 with {\arrow{>}}}
-            ]
-                \draw[postaction={decorate}] (1, 0) -- (3, 0);
-                \draw[postaction={decorate}] (3, 0) -- (2, 2);
-                \draw[postaction={decorate}] (2, 2) -- (0, 2);
-                \draw[postaction={decorate}] (0, 2) -- (1, 0);
-                \draw[postaction={decorate}] (1, 0) -- (2, 2);
-            \end{scope}
-        \end{tikzpicture}
+        \begin{center}
+            \begin{tikzpicture}[scale=0.75]
+                \coordinate (p1) at (1, 0){};
+                \coordinate (p2) at (3, 0){};
+                \coordinate (p3) at (2, 2){};
+                \coordinate (p4) at (0, 2){};
+
+                \draw[fill=blue!35] (p1) -- (p2) -- (p3) -- cycle;
+                \draw[fill=red!35] (p1) -- (p3) -- (p4) -- cycle;
+                \begin{scope}[
+                    very thick,
+                    decoration={markings, mark=at position 0.5 with {\arrow{>}}}
+                ]
+                    \draw[postaction={decorate}] (p1) -- (p2);
+                    \draw[postaction={decorate}] (p2) -- (p3);
+                    \draw[postaction={decorate}] (p3) -- (p4);
+                    \draw[postaction={decorate}] (p4) -- (p1);
+                    \draw[postaction={decorate}] (p1) -- (p3);
+                \end{scope}
+                \foreach \p in {p1, p2, p3, p4} {
+                    \filldraw (\p) circle (3pt);
+                }
+            \end{tikzpicture}
+        \end{center}
     \end{minipage}
     \hfill
     \begin{minipage}{0.48\linewidth}
@@ -205,57 +215,52 @@ or in other words the new polygon has the same boundary as the old.
 Figure \ref{fig:split-transformation} illustrates the split transformation on a single quadrilateral and shows the boundary matrices before and after.
 
 \begin{figure}[h]
-    \begin{tikzpicture}
-        \coordinate (p0) at (1.5, 1){};
-        \coordinate (p1) at (1, 0){};
-        \coordinate (p2) at (3, 0){};
-        \coordinate (p3) at (2, 2){};
-        \coordinate (p4) at (0, 2){};
+    \begin{center}
+        \begin{tikzpicture}[scale=0.75]
+            \newcommand*{\defcoords}{
+                \coordinate (p0) at (1.5, 1){};
+                \coordinate (p1) at (1, 0){};
+                \coordinate (p2) at (3, 0){};
+                \coordinate (p3) at (2, 2){};
+                \coordinate (p4) at (0, 2){};
+            }
 
-        \draw[fill=purple!35] (p1) -- (p2) -- (p3) -- (p4) -- cycle;
-        \begin{scope}[
-            very thick,
-            decoration={markings, mark=at position 0.5 with {\arrow{>}}}
-        ]
-            \draw[postaction={decorate}] (p1) -- (p2);
-            \draw[postaction={decorate}] (p2) -- (p3);
-            \draw[postaction={decorate}] (p3) -- (p4);
-            \draw[postaction={decorate}] (p4) -- (p1);
-        \end{scope}
+            \begin{scope}[
+                very thick,
+                decoration={markings, mark=at position 0.5 with {\arrow{>}}}
+            ]
+                \defcoords
+                \draw[postaction={decorate}] (p1) -- (p2);
+                \draw[postaction={decorate}] (p2) -- (p3);
+                \draw[postaction={decorate}] (p3) -- (p4);
+                \draw[postaction={decorate}] (p4) -- (p1);
 
-        \foreach \p in {p1, p2, p3, p4} {
-            \filldraw (\p) circle (2pt);
-        }
-    \end{tikzpicture}
-    \begin{tikzpicture}
-        \coordinate (p0) at (1.5, 1){};
-        \coordinate (p1) at (1, 0){};
-        \coordinate (p2) at (3, 0){};
-        \coordinate (p3) at (2, 2){};
-        \coordinate (p4) at (0, 2){};
+                \foreach \p in {p1, p2, p3, p4} {
+                    \filldraw (\p) circle (2pt);
+                }
+            \end{scope}
 
-        \draw[fill=orange!15] (p1) -- (p2) -- (p0) -- cycle;
-        \draw[fill=green!15] (p2) -- (p3) -- (p0) -- cycle;
-        \draw[fill=blue!15] (p3) -- (p4) -- (p0) -- cycle;
-        \draw[fill=yellow!15] (p4) -- (p1) -- (p0) -- cycle;
-        \begin{scope}[
-            very thick,
-            decoration={markings, mark=at position 0.5 with {\arrow{>}}}
-        ]
-            \draw[postaction={decorate}] (p1) -- (p2);
-            \draw[postaction={decorate}] (p2) -- (p3);
-            \draw[postaction={decorate}] (p3) -- (p4);
-            \draw[postaction={decorate}] (p4) -- (p1);
-            \draw[postaction={decorate}] (p0) -- (p2);
-            \draw[postaction={decorate}] (p0) -- (p3);
-            \draw[postaction={decorate}] (p0) -- (p4);
-            \draw[postaction={decorate}] (p0) -- (p1);
-        \end{scope}
+            \begin{scope}[
+                very thick,
+                shift={(4, 0)},
+                decoration={markings, mark=at position 0.5 with {\arrow{>}}}
+            ]
+                \defcoords
+                \draw[postaction={decorate}] (p1) -- (p2);
+                \draw[postaction={decorate}] (p2) -- (p3);
+                \draw[postaction={decorate}] (p3) -- (p4);
+                \draw[postaction={decorate}] (p4) -- (p1);
+                \draw[postaction={decorate}] (p0) -- (p2);
+                \draw[postaction={decorate}] (p0) -- (p3);
+                \draw[postaction={decorate}] (p0) -- (p4);
+                \draw[postaction={decorate}] (p0) -- (p1);
 
-        \foreach \p in {p0, p1, p2, p3, p4} {
-            \filldraw (\p) circle (2pt);
-        }
-    \end{tikzpicture}
+                \foreach \p in {p0, p1, p2, p3, p4} {
+                    \filldraw (\p) circle (2pt);
+                }
+            \end{scope}
+        \end{tikzpicture}
+    \end{center}
 
     \begin{equation*}
         \partial_1 = \left[\begin{smallmatrix}

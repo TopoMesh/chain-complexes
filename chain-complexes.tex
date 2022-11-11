@@ -12,6 +12,13 @@
 \def\thepage {}
 \bibliographystyle{imr}
 
+\newenvironment{smallarray}[1]
+ {\null\,\vcenter\bgroup\scriptsize
+  \renewcommand{\arraystretch}{0.7}%
+  \arraycolsep=.13885em
+  \hbox\bgroup$\array{@{}#1@{}}}
+ {\endarray$\egroup\egroup\,\null}
+
 \begin{document}
 
 \title{An ergonomic approach to topological transformations of unstructured meshes}
@@ -99,21 +106,21 @@ See figure \ref{fig:two-triangle-chain-complex} for an illustration of a simple 
     \begin{minipage}{0.48\linewidth}
         {\small
             \begin{equation*}
-                \partial_1 = \left[\begin{matrix}
+                \partial_1 = \left[\begin{smallmatrix}
                     - &   & + & - &   \\
                     + & - &   &   & + \\
                       & + & - &   &   \\
                       &   &   & + & -
-                \end{matrix}\right]
+                \end{smallmatrix}\right]
             \end{equation*}
             \begin{equation*}
-                \partial_2 = \left[\begin{matrix}
+                \partial_2 = \left[\begin{smallmatrix}
                     + & - \\
                     + &   \\
                     + &   \\
                       & + \\
                       & +
-                \end{matrix}\right]
+                \end{smallmatrix}\right]
             \end{equation*}
         }
     \end{minipage}
@@ -250,44 +257,40 @@ Figure \ref{fig:split-transformation} illustrates the split transformation on a 
         }
     \end{tikzpicture}
 
-    {\small
-        \begin{equation*}
-            \partial_1 = \left[\begin{matrix}
-                - &   &   & + \\
-                + & - &   &   \\
-                  & + & - &   \\
-                  &   & + & -
-            \end{matrix}\right],
-            \quad
-            \partial_2 = \left[\begin{matrix}
-                + \\ + \\ + \\ +
-            \end{matrix}\right]
-        \end{equation*}
+    \begin{equation*}
+        \partial_1 = \left[\begin{smallmatrix}
+            - &   &   & + \\
+            + & - &   &   \\
+              & + & - &   \\
+              &   & + & -
+        \end{smallmatrix}\right],
+        \quad
+        \partial_2 = \left[\begin{smallmatrix}
+            + \\ + \\ + \\ +
+        \end{smallmatrix}\right]
+    \end{equation*}
 
-        \begin{equation*}
-            \partial_1' = \left[\begin{array}{cccc|cccc}
-                - &   &   & + & + &   &   &   \\
-                + & - &   &   &   & + &   &   \\
-                  & + & - &   &   &   & + &   \\
-                  &   & + & - &   &   &   & + \\
-                \hline
-                  &   &   &   & - & - & - & -
-            \end{array}\right]
-        \end{equation*}
-        \begin{equation*}
-            \partial_2' = \left[\begin{array}{cccc}
-                + &   &   &   \\
-                  & + &   &   \\
-                  &   & + &   \\
-                  &   &   & + \\
-                \hline
-                + &   &   & - \\
-                - & + &   &   \\
-                  & - & + &   \\
-                  &   & - & +
-            \end{array}\right]
-        \end{equation*}
-    }
+    \begin{equation*}
+        \partial_1' = \left[\begin{smallarray}{cccc|cccc}
+            - &   &   & + & + &   &   &   \\
+            + & - &   &   &   & + &   &   \\
+              & + & - &   &   &   & + &   \\
+              &   & + & - &   &   &   & + \\
+            \hline
+              &   &   &   & - & - & - & -
+        \end{smallarray}\right], \quad
+        \partial_2' = \left[\begin{smallarray}{cccc}
+            + &   &   &   \\
+              & + &   &   \\
+              &   & + &   \\
+              &   &   & + \\
+            \hline
+            + &   &   & - \\
+            - & + &   &   \\
+              & - & + &   \\
+              &   & - & +
+        \end{smallarray}\right]
+    \end{equation*}
 
     \caption{Quadrilateral before and after splitting on a new vertex in the center (top) and boundary matrices before and after (bottom).}
     \label{fig:split-transformation}

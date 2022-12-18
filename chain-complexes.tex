@@ -27,7 +27,7 @@
     $^1$University of Washington, Seattle, WA, USA, shapero@uw.edu
 }
 
-\abstract{In this paper, we will describe a new approach to performing local transformations to the topology of an unstructured mesh.
+\abstract{In this paper, we will describe an approach to performing local transformations to the topology of an unstructured mesh.
 Our approach borrows some ideas from algebraic topology and makes for much easier verification of the underlying computational kernels.}
 
 \keywords{mesh generation, computational geometry, topology}
@@ -40,15 +40,15 @@ Our approach borrows some ideas from algebraic topology and makes for much easie
 % --------------------
 \section{Introduction}
 
-All algorithms for generating unstructured meshes are based on using a sequence of local transformations of the mesh topology.
-The simplest of these transformations is a 2-2 edge flip, which is the basis of one common algorithm for computing the Delaunay triangulation of a planar point set \cite{lawson1972transforming}.
-In 3D, these generalize to 3-2 and 2-3 tetrahedral flips, and in arbitrary dimensions these are called bistellar flips or Pachner moves \cite{pachner1991pl}.
-An alternative algorithm for Delaunay triangulation instead uses deletion and retriangulation of star-shaped polytopes \cite{bowyer1981computing, watson1981computing}.
+All algorithms for generating unstructured meshes are based on applying a sequence of local transformations to the mesh topology.
+For example, to compute the Delaunay triangulation, the Lawson algorithm uses a sequence of bistellar flips, while the Bowyer-Watson algorithm is based on splitting star-shaped polytopes along a vertex \cite{berg1997computational, cheng2013delaunay}.
+Implementing these transformations, however, can be difficult and error-prone.
 
-Implementing these topological transformations can be difficult and error-prone.
-In this paper, we will describe a new method for implementing local topological transformations using concepts from algebraic topology: the \emph{boundary operators} of a \emph{chain complex}.
+In this paper, we will describe a method for implementing local topological transformations using concepts from algebraic topology: the \emph{boundary operators} of a \emph{chain complex}.
 These boundary operators are really just matrices with integer coefficients.
 We can then describe transformations using linear algebra.
+This idea is not new; DiCarlo and others \cite{dicarlo2007solid} used chain complexes to implement the Euler make/kill operators from solid modeling.
+Our contribution is a linear algebraic representation of splitting a star-shaped collection of polygons on a new vertex.
 
 
 % -----------------------
@@ -323,7 +323,7 @@ Again, a rudimentary calculation shows that the fundamental equation \eqref{eq:d
 To our knowledge, equations \eqref{eq:split-k} and \eqref{eq:split-n} have not appeared in the literature before.
 All the primitive construction operations required to form these matrices are available in the NumPy linear algebra module \cite{harris2020array}.
 
-The Bowyer-Watson algorithm \cite{bowyer1981computing, watson1981computing} for Delaunay triangulation and all common algorithms for computing convex hulls \cite{berg1997computational} only require the split transformation.
+The Bowyer-Watson algorithm for Delaunay triangulation and all common algorithms for computing convex hulls only require the split transformation \cite{berg1997computational}.
 
 \subsection{Splitting and merging}
 
@@ -430,13 +430,13 @@ For geometric predicates, we used the Python standard library's built-in routine
 
 Doubly-connected edge lists have historically been popular for mesh generation because they offer a simple interface for traversing the topology \cite{guibas1985primitives}.
 Here we propose that boundary operators are an ideal representation if the goal is to perform topological transformations.
-Our work was inspired by \cite{knepley2009mesh}, which used CW complexes to describe mesh topologies and now forms the core of the PETSc DMPlex class \cite{balay2019petsc}.
+This idea has appeared before, for example in the work of DiCarlo and others \cite{dicarlo2007solid}.
 
 Boundary operators are only necessary for representing a small patch of the topology at a time.
 Once the transformed patch is computed, it can be translated back to a set of simplexes.
 Boundary operators are useful for describing non-simplicial intermediate states of a transformation; they are not space-optimal for describing an entire simplicial complex.
 
-When the underlying objects of study can be represented as linear operators, we can apply linear algebraic reasoning and intuition to define transformations and easily verify that they preserve all of the important invariants.
+When the underlying objects of study can be represented as linear operators, we can apply linear algebraic reasoning to define transformations and verify that they preserve all of the important invariants.
 The condition in equation \eqref{eq:ddzero} that the product of two boundary operators is zero is a very powerful invariant for ensuring the validity of the underlying topology.
 
 

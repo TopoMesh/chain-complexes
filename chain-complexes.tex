@@ -165,38 +165,33 @@ By applying this recovery procedure for every top-dimensional cell, one can tran
 % -----------------------
 \section{Transformations}
 
-The goal of using chain complexes and boundary operators is to represent all local transformations through purely linear algebraic means.
+If we choose to represent mesh topologies using boundary operators, we can describe transformations through linear algebra.
 Phrasing the problem in this way makes verifying correctness easy.
 
-\subsection{Merging}
-
-First, observe that if $A$, $B$ are integer matrices such that the image of $A\cdot B$ is in the image of $\partial_{k + 1}$, then the matrices
+First, observe that if $A$, $B$ are integer matrices such that the image of $\partial_{k + 1}$ is an invariant subspace of $A\cdot B$, then the matrices
 \begin{equation}
     \partial_k' = \partial_k\cdot A, \quad \partial_{k + 1}' = B\cdot\partial_{k + 1}
 \end{equation}
 still satisfy $\partial_k'\cdot\partial_{k + 1}' = 0$.
-A particular case is $A\cdot B = I$, which includes for example permutations of the cells.
+A particular case is $A\cdot B = I$, which includes permutations of the cell ordering.
 The more general case regarding the image of $A\cdot B$ is needed for some irreversible transformations.
 
-A \emph{merge} of adjacent $k$-cells replaces them with a single cell.
-Merging is a column operation, i.e. right multiplication, on the matrix $\partial_k$.
-Adjacent top-dimensional cells can be merged freely and the new boundary operator is
-\begin{equation}
-    \partial_n' = \partial_n\cdot\mathbbm{1}.
-\end{equation}
-Strictly speaking, we should also impose a condition that the union of the cells to be merged is simply-connected.
-One might imagine triangulating an annulus and then merging all the cells together; the union is no longer simply-connected, which violates one of the conditions to be a cell complex (see \cite{hatcher2002algebraic}).
-In realistic problems, for example in implementing the Bowyer-Watson algorithm, one can often prove that a set of cells to be merged form a star-shaped polygon.
+\subsection{Merging}
 
-For cells that are not top-dimensional, we might need to instead flip some signs, in which case the transformation is
+A \emph{merge} of a set of $k$-cells replaces them with a single cell (provided that their union is simply-connected).
+Merging is a column operation on the matrix $\partial_k$.
+In the simplest case, the result column is the sum of all the columns to be merged, but in general we might need to flip some signs:
 \begin{align}
     \partial_k' & = \partial_k\cdot\text{diag}(s_0, \ldots, s_m)\cdot\mathbbm{1}, \\
-    \partial_{k + 1}' & = \left[\begin{matrix} 0 \ldots 1 \ldots 0\end{matrix}\right]\partial_{k + 1}.
+    \partial_{k + 1}' & = \left[\begin{matrix} 0 \ldots 1 \ldots 0\end{matrix}\right]\partial_{k + 1}. \label{eq:merge-k+1}
 \end{align}
 where $s_i$ are all $\pm 1$.
+The signs are chosen so that any higher-dimensional cell $\sigma$ has the same incidence with respect to any of the cells $\tau$ to be merged.
 The transformation to the rows of $\partial_{k + 1}$ collapses all incidence to any of the desired $k$-cells into incidence to the merged $k$-cell.
+For merging cells of top dimension $n$, there are no higher-dimensional cells to apply equation \eqref{eq:merge-k+1} to and this step is left out.
 
-\emph{Edge collapsing}, the key transformation in many surface simplification algorithms \cite{gueziec1995surface}, consists of merging two vertices followed by deletion of empty or duplicate cells.
+\emph{Edge collapsing}, the key transformation in surface simplification algorithms \cite{gueziec1995surface}, is a merge of two vertices.
+
 
 \subsection{Splitting}
 

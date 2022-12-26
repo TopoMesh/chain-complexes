@@ -4,7 +4,7 @@ all: chain-complexes.pdf
 	sketch $< -o $@
 
 %.pdf: %.tex %.bib figures/tetrahedra.tikz
-	pdflatex $<
+	pdflatex -shell-escape $<
 	bibtex $*
-	pdflatex $<
-	pdflatex $<
+	pdflatex -shell-escape $<
+	pdflatex -shell-escape $<

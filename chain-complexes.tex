@@ -6,6 +6,7 @@
 \usepackage{bbm}       % for \mathbbm{1}
 \usepackage{amsmath}
 \usepackage{mathrsfs}  % for \mathscr
+\usepackage{minted}    % for including source code
 \usepackage{tikz}
 \usetikzlibrary{decorations.markings}
 
@@ -415,7 +416,36 @@ Using the boundary operator representation might make it possible to implement c
 
 As a proof of concept, we developed a software package called \emph{zmsh}
 which implements the split transformation defined in equations \eqref{eq:split-k} and \eqref{eq:split-n}.
-We used the split transformation to implement a convex hull algorithm that (in principle) works in arbitrary dimensions.
+The source code for the split transformation is shown in figure \ref{fig:split-source-code}.
+\begin{figure}
+    \begin{minted}[fontsize=\footnotesize,linenos]{python}
+import numpy as np
+from typing import List
+
+def split(D: List[np.ndarray]) -> List[np.ndarray]:
+    # Create the boundary matrices for 1 <= k < n
+    n_vertices = D[0].shape[1]
+    E = [np.ones((1, n_vertices + 1), int)]
+    for k in range(1, len(D) - 1):
+        n_cells = D[k].shape[1]
+        n_sub_faces, n_faces = D[k - 1].shape
+        I = np.identity(n_faces, int)
+        Z = np.zeros((n_sub_faces, n_cells), int)
+        E_k = np.block([[D[k], I], [Z, -D[k - 1]]])
+        E.append(E_k)
+
+    # Create the top-dimensional boundary matrix
+    C = np.diag(np.sum(D[-1], axis=1))
+    E_n = np.vstack((C, -D[-2] @ C))
+    E.append(E_n)
+    return E
+    \end{minted}
+    \caption{Python source code for the split transformation.
+    Line 13 corresponds to equation \eqref{eq:split-k}; lines 17 and 18 correspond to equation \eqref{eq:split-n}.
+    The real version has some additional logic to remove empty cells.}
+    \label{fig:split-source-code}
+\end{figure}
+We used the split transformation to implement a convex hull algorithm that works in arbitrary dimensions.
 To test the convex hull code, we used (1) random point sets up to dimension 5 and (2) several synthetic input sets with various degeneracies such as coplanarity.
 For geometric predicates, we used the Python standard library's built-in routines to convert a floating point value exactly to a ratio of big integers.
 

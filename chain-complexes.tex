@@ -50,6 +50,7 @@ These boundary operators are really just matrices with integer coefficients.
 We can then describe transformations using linear algebra.
 This idea is not new; DiCarlo and others \cite{dicarlo2007solid} used chain complexes to implement the Euler make/kill operators from solid modeling.
 Our contribution is a linear algebraic representation of splitting a star-shaped collection of polygons on a new vertex.
+The key result is in equations \eqref{eq:split-k} and \eqref{eq:split-n}.
 
 
 % -----------------------
@@ -316,7 +317,7 @@ This suggests the transformation
     \partial_n' & = \left[\begin{matrix}\text{diag}(\partial_n\cdot\mathbbm{1}) \\ -\partial_{n - 1}\text{diag}(\partial_n\cdot\mathbbm{1})\end{matrix}\right] \label{eq:split-n}
 \end{align}
 Again, a rudimentary calculation shows that the fundamental equation \eqref{eq:ddzero} still holds and that the new polytopes have the same boundary as the old.
-To our knowledge, equations \eqref{eq:split-k} and \eqref{eq:split-n} have not appeared in the literature before.
+To our knowledge, equations \eqref{eq:split-k} and \eqref{eq:split-n} have not appeared in the literature before and these are the main contribution of this paper.
 All the primitive construction operations required to form these matrices are available in the NumPy linear algebra module \cite{harris2020array}.
 
 The Bowyer-Watson algorithm for Delaunay triangulation and all common algorithms for computing convex hulls only require the split transformation \cite{berg1997computational}.

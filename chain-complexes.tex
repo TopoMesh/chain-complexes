@@ -56,11 +56,17 @@ The key result is in equations \eqref{eq:split-k} and \eqref{eq:split-n}.
 % -----------------------
 \section{Chain complexes}
 
-Here we briefly recall some definitions; see \cite{hatcher2002algebraic} for all the formalities.
-A 0-dimensional cell complex $X^0$ is a finite collection of points.
-A regular $n$-dimensional cell complex consists of an $n - 1$-dimensional cell complex $X^{n - 1}$ together with a collection $\{\phi_\alpha^n\}$ of homeomorphisms, called \emph{attaching maps}, from the unit sphere in $S^{n - 1}$ into $X^{n - 1}$.
+CW complexes are the most general structure describing spaces obtained by gluing cells together.
+Simplicial, cubical, and polygonal meshes are all CW complexes, but each category has different constraints on what a cell can be.
+The boundary operators of a complex are integer matrices the encode the adjacency relations between $k$- and $k - 1$-dimensional cells.
+The boundary operators describe what the faces of a given cell are, but they also describe how faces are oriented in the cells that contain them.
+Orientation allows us to express the intuitive idea that two neighboring cells see their common face from opposite sides.
+In the following, we briefly recall some definitions; see \cite{hatcher2002algebraic}.
+
+CW complexes are defined inductively by dimension.
+A 0-dimensional complex $X^0$ is a finite collection of points.
+A regular $n$-dimensional CW complex consists of an $n - 1$-dimensional complex $X^{n - 1}$ together with a collection $\{\phi_\alpha^n\}$ of homeomorphisms, called \emph{attaching maps}, from the unit sphere in $S^{n - 1}$ into $X^{n - 1}$.
 The space $X^n$ is then the disjoint union of copies of the unit ball with each copy's boundary identified with its image in $X^{n - 1}$ under the attaching map with the quotient topology.
-Both simplicial and cubical complexes are cell complexes.
 
 Given a $k$-cell $\sigma$ and a $k - 1$-cell $\tau$ of a complex $X$, we can define the \emph{incidence number} as
 \begin{equation}
@@ -69,7 +75,7 @@ Given a $k$-cell $\sigma$ and a $k - 1$-cell $\tau$ of a complex $X$, we can def
 The formal definition of incidence number uses the topological degree of the attaching map $\phi$ of $\tau$ into $\partial\sigma$, which we will not define here.
 For simplicial and cubical complexes, the incidence numbers between cells can be read off directly from their constituent vertexes.
 
-The key object of interest for us is the \emph{boundary operator} on a cell complex.
+The key object of interest for us is the \emph{boundary operator}.
 The \emph{chain module} $\mathscr{C}_k$ is the set of all formal $\mathbb{Z}$-linear combinations of cells of dimension $k$.
 Given a single $k$-cell $\sigma$ of $X$, we define
 \begin{equation}
@@ -138,8 +144,9 @@ A collection of $\mathbb{Z}$-modules $\mathscr{C}_k$ together with homomorphisms
     \label{fig:two-triangle-chain-complex}
 \end{figure}
 
-The abstract concept of a cell complex can be made computable by representing its boundary operators as (sparse) matrices with integer entries.
+The abstract concept of a CW complex can be made computable by representing its boundary operators as (sparse) matrices with integer entries.
 We can read off the faces and sub-faces of a particular cell by looking at which rows are non-zero in the corresponding columns of the boundary matrices.
+Equation \eqref{eq:ddzero} is easy to verify in practice and guarantees the topological validity of the data structure.
 See figure \ref{fig:two-triangle-chain-complex} for an illustration of a simple topology together with the corresponding boundary operators.
 
 We'll introduce one final conceit that makes later constructions much more elegant.
@@ -396,8 +403,10 @@ For example, figure \ref{fig:2-2-flip} shows how to perform a 2-2 flip in 2D by 
 \end{figure}
 
 A few papers have proposed using multi-cell transformations for 3D mesh improvement \cite{klingner2008aggressive}.
-Multi-cell transformations are more complex than 2-3 or 3-2 flips, but \cite{misztal2009tetrahedral} showed that they can be implemented as a sequence of 2-3 and 3-2 flips.
-Using the boundary operator representation might make it possible to implement complex topological transforms with less effort and in fewer steps.
+Multi-cell transformations are more complex than 2-3 or 3-2 flips, but \cite{misztal2009tetrahedral} showed that they can be implemented as a sequence of flips.
+Using the boundary operators might make it possible to implement complex transformations with less effort.
+The split transformation that we derived here is based on computing the topological cone of a space and then removing the base of the cone.
+Multiface retriangulation, as advocated in \cite{misztal2009tetrahedral}, is a transformation of a \emph{suspension}, a related construction in algebraic topology \cite{hatcher2002algebraic}.
 
 
 % ---------------------

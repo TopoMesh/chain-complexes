@@ -304,8 +304,9 @@ This suggests the transformation
     \partial_n' & = \left[\begin{matrix}\text{diag}(\partial_n\cdot\mathbbm{1}) \\ -\partial_{n - 1}\text{diag}(\partial_n\cdot\mathbbm{1})\end{matrix}\right] \label{eq:split-n}
 \end{align}
 Again, a rudimentary calculation shows that the fundamental equation \eqref{eq:ddzero} still holds and that the new polytopes have the same boundary as the old.
-To our knowledge, equations \eqref{eq:split-k} and \eqref{eq:split-n} have not appeared in the literature before and these are the main contribution of this paper.
-All the primitive construction operations required to form these matrices are available in the NumPy linear algebra module \cite{harris2020array}.
+
+Equation \eqref{eq:split-k} has appeared before in the literature on homological algebra as the expression for the boundary operators of the \emph{cone} of a space \cite{gelfand1994homological}.
+To our knowledge, using these equations for doing real computations is entirely new.
 
 The Bowyer-Watson algorithm for Delaunay triangulation and all common algorithms for computing convex hulls only require the split transformation \cite{berg1997computational}.
 

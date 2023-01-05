@@ -42,7 +42,7 @@ Our approach borrows some ideas from algebraic topology and makes for much easie
 \section{Introduction}
 
 All algorithms for generating unstructured meshes are based on applying a sequence of local transformations to the mesh topology.
-For example, to compute the Delaunay triangulation, the Lawson algorithm uses a sequence of bistellar flips, while the Bowyer-Watson algorithm is based on splitting star-shaped polytopes along a vertex \cite{berg1997computational, cheng2013delaunay}.
+For example, to compute the Delaunay triangulation, the Lawson algorithm uses a sequence of bistellar flips, while the Bowyer-Watson algorithm is based on splitting star-shaped polytopes along a vertex \cite{cheng2013delaunay}.
 Implementing these transformations, however, can be difficult and error-prone.
 
 In this paper, we will describe a method for implementing local topological transformations using concepts from algebraic topology: the \emph{boundary operators} of a \emph{chain complex}.
@@ -318,7 +318,7 @@ Again, a rudimentary calculation shows that the fundamental equation \eqref{eq:d
 Equation \eqref{eq:split-k} has appeared before in the literature on homological algebra as the expression for the boundary operators of the \emph{cone} of a space \cite{gelfand1994homological}.
 To our knowledge, using these equations for doing real computations is entirely new.
 
-The Bowyer-Watson algorithm for Delaunay triangulation and all common algorithms for computing convex hulls only require the split transformation \cite{berg1997computational}.
+The Bowyer-Watson algorithm for Delaunay triangulation and all common algorithms for computing convex hulls only require the split transformation \cite{cheng2013delaunay}.
 
 \subsection{Splitting and merging}
 

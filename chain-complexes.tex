@@ -48,9 +48,12 @@ Implementing these transformations, however, can be difficult and error-prone.
 In this paper, we will describe a method for implementing local topological transformations using concepts from algebraic topology: the \emph{boundary operators} of a \emph{chain complex}.
 These boundary operators are really just matrices with integer coefficients.
 We can then describe transformations using linear algebra.
-This idea is not new; DiCarlo and others \cite{dicarlo2007solid} used chain complexes to implement the Euler make/kill operators from solid modeling.
-Our contribution is a linear algebraic representation of splitting a star-shaped collection of polytopes on a vertex.
+Our contribution is a linear algebraic representation of splitting a star-shaped collection of polytopes on a vertex, together with a proof-of-concept application to computing convex hulls.
 The key result is in equations \eqref{eq:split-k} and \eqref{eq:split-n}.
+
+The idea of using linear algebra as a low-level description language for building applications in other domains of science or engineering is not new.
+The GraphBLAS project aims to implement common algorithms for the analysis of large graphs using linear algebra \cite{mattson2013standards}.
+In computational geometry, DiCarlo and others \cite{dicarlo2007solid} used chain complexes to implement the Euler make/kill operators from solid modeling.
 
 
 % -----------------------

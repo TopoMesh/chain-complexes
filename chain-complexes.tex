@@ -49,7 +49,7 @@ In this paper, we will describe a method for implementing local topological tran
 These boundary operators are really just matrices with integer coefficients.
 We can then describe transformations using linear algebra.
 This idea is not new; DiCarlo and others \cite{dicarlo2007solid} used chain complexes to implement the Euler make/kill operators from solid modeling.
-Our contribution is a linear algebraic representation of splitting a star-shaped collection of polygons on a new vertex.
+Our contribution is a linear algebraic representation of splitting a star-shaped collection of polytopes on a vertex.
 The key result is in equations \eqref{eq:split-k} and \eqref{eq:split-n}.
 
 
@@ -58,14 +58,14 @@ The key result is in equations \eqref{eq:split-k} and \eqref{eq:split-n}.
 
 CW complexes are the most general structure describing spaces obtained by gluing cells together.
 Simplicial, cubical, and polygonal meshes are all CW complexes, but each category has different constraints on what a cell can be.
-The boundary operators of a complex are integer matrices the encode the adjacency relations between $k$- and $k - 1$-dimensional cells.
+The boundary operators of a complex are integer matrices that encode the adjacency relations between $k$- and $k - 1$-dimensional cells.
 The boundary operators describe what the faces of a given cell are, but they also describe how faces are oriented in the cells that contain them.
 Orientation allows us to express the intuitive idea that two neighboring cells see their common face from opposite sides.
 In the following, we briefly recall some definitions; see \cite{hatcher2002algebraic}.
 
 CW complexes are defined inductively by dimension.
 A 0-dimensional complex $X^0$ is a finite collection of points.
-A regular $n$-dimensional CW complex consists of an $n - 1$-dimensional complex $X^{n - 1}$ together with a collection $\{\phi_\alpha^n\}$ of homeomorphisms, called \emph{attaching maps}, from the unit sphere in $S^{n - 1}$ into $X^{n - 1}$.
+A regular $n$-dimensional CW complex consists of an $n - 1$-dimensional complex $X^{n - 1}$ together with a collection $\{\phi_\alpha^n\}$ of homeomorphisms, called \emph{attaching maps}, from the unit sphere $S^{n - 1}$ into $X^{n - 1}$.
 The space $X^n$ is then the disjoint union of copies of the unit ball with each copy's boundary identified with its image in $X^{n - 1}$ under the attaching map with the quotient topology.
 
 Given a $k$-cell $\sigma$ and a $k - 1$-cell $\tau$ of a complex $X$, we can define the \emph{incidence number} as
